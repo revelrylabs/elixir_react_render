@@ -20,6 +20,7 @@ defmodule ReactRender do
   @spec start_link(keyword()) :: {:ok, pid} | {:error, any()}
   def start_link(args) do
     default_options = [pool_size: @default_pool_size]
+    args = Keyword.new([args])
     opts = Keyword.merge(default_options, args)
 
     Supervisor.start_link(__MODULE__, opts, name: __MODULE__)
