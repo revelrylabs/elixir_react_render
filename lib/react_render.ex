@@ -78,12 +78,11 @@ defmodule ReactRender do
           |> Jason.encode!()
           |> String.replace("\"", "&quot;")
 
-        html = """
-        <div data-rendered data-component="#{component}" data-props="#{props}">
-        #{markup}
-        </div>
-        """
-        |> String.replace("\n", "")
+        html = EEx.eval_file "template.html.eex", [
+          component: component,
+          props: props,
+          markup: markup,
+        ]
 
         {:safe, html}
     end

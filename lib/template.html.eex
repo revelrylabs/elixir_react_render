@@ -1,0 +1,1 @@
+<div data-rendered data-component="<%= @component %>" data-props="<%= @props =>" ><%= @markup %></div>
