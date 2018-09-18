@@ -18,7 +18,7 @@ defmodule ReactRender.Worker do
   def init(render_service_path) do
     node = System.find_executable("node")
 
-    port = Port.open({:spawn_executable, node}, args: [render_service_path])
+    port = Port.open({:spawn_executable, node}, [:stderr_to_stdout, :binary, :exit_status, args: [render_service_path]])
 
     {:ok, [render_service_path, port]}
   end
@@ -33,17 +33,27 @@ defmodule ReactRender.Worker do
 
     Port.command(port, body <> "\n")
 
-    response =
-      receive do
-        {_, {:data, data}} ->
-          Jason.decode!(to_string(data))
-      end
-
+    response = retreive_data(port)
+    
     {:reply, response, state}
   end
 
   @doc false
   def terminate(_reason, [_, port]) do
     send(port, {self(), :close})
+  end
+
+  defp retreive_data(port) do
+    chuncks = <<>>
+    receive do
+      {^port, {:data, data}} ->
+        completed = String.ends_with?(data, "\"Wall\"}")
+        chuncks = chuncks <> data
+        if (completed) do
+          Jason.decode!(chuncks)
+        else
+          retreive_data(port)
+        end
+    end
   end
 end
