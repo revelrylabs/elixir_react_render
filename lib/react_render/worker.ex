@@ -24,11 +24,11 @@ defmodule ReactRender.Worker do
   end
 
   @doc false
-  def handle_call({:html, component_path, props}, _from, [_, port] = state) do
+  def handle_call({:html, component, props}, _from, state = [_, port]) do
     body =
       Jason.encode!(%{
-        path: component_path,
-        props: props
+        component: component,
+        props: props,
       })
 
     Port.command(port, body <> "\n")
