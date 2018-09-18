@@ -43,8 +43,8 @@ defmodule ReactRender do
   json
   """
   @spec get_html(binary(), map()) :: {:ok, binary()} | {:error, map()}
-  def get_html(component_path, props \\ %{}) do
-    case do_get_html(component_path, props) do
+  def get_html(component, props \\ %{}) do
+    case do_get_html(component, props) do
       {:error, _} = error ->
         error
 
@@ -66,33 +66,31 @@ defmodule ReactRender do
   json
   """
   @spec render(binary(), map()) :: {:safe, binary()}
-  def render(component_path, props \\ %{}) do
-    case do_get_html(component_path, props) do
+  def render(component, props \\ %{}) do
+    case do_get_html(component, props) do
       {:error, %{message: message, stack: stack}} ->
         raise ReactRender.RenderError, message: message, stack: stack
 
-      {:ok, %{"markup" => markup, "component" => component}} ->
+      {:ok, %{"markup" => markup}} ->
         props =
           props
           |> Jason.encode!()
           |> String.replace("\"", "&quot;")
 
         html = """
-        <div data-rendered data-component="#{component}" data-props="#{props}">
-        #{markup}
-        </div>
+          <article data-rendered data-component="#{component}" data-props="#{props}">#{markup}</article>
         """
 
         {:safe, html}
     end
   end
 
-  defp do_get_html(component_path, props) do
+  defp do_get_html(component, props) do
     task =
       Task.async(fn ->
         :poolboy.transaction(
           @pool_name,
-          fn pid -> GenServer.call(pid, {:html, component_path, props}) end,
+          fn pid -> GenServer.call(pid, {:html, component, props}) end,
           :infinity
         )
       end)
