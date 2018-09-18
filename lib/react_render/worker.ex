@@ -43,16 +43,15 @@ defmodule ReactRender.Worker do
     send(port, {self(), :close})
   end
 
-  defp retreive_data(port) do
-    chuncks = <<>>
+  defp retreive_data(port, chunks \\ <<>>) do
     receive do
       {^port, {:data, data}} ->
         completed = String.ends_with?(data, "\"Wall\"}")
-        chuncks = chuncks <> data
+        chunks = chunks <> data
         if (completed) do
-          Jason.decode!(chuncks)
+          Jason.decode!(chunks)
         else
-          retreive_data(port)
+          retreive_data(port, chunks)
         end
     end
   end
