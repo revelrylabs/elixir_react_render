@@ -77,11 +77,13 @@ defmodule ReactRender do
           |> Jason.encode!()
           |> String.replace("\"", "&quot;")
 
-        html = """
-        <div data-rendered data-component="#{component}" data-props="#{props}">
-        #{markup}
-        </div>
-        """
+        html =
+          """
+          <div data-rendered data-component="#{component}" data-props="#{props}">
+          #{markup}
+          </div>
+          """
+          |> String.replace("\n", "")
 
         {:safe, html}
     end

@@ -3,7 +3,9 @@ const React = require('react')
 const readline = require('readline')
 
 require('babel-polyfill')
-require('babel-register')
+require('babel-register')({
+  presets: ['env']
+})
 
 function deleteCache(componentPath) {
   if (

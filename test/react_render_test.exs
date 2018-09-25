@@ -3,7 +3,7 @@ defmodule ReactRender.Test do
   doctest ReactRender
 
   setup_all do
-    ReactRender.start_link(render_service_path: "./priv/server.js")
+    apply(ReactRender, :start_link, [[render_service_path: "./priv/server.js"]])
     :ok
   end
 
