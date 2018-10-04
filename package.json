@@ -8,7 +8,6 @@
     "LICENSE",
     "package.json",
     "./priv/server.js",
-    "./priv/client.js",
     ".babelrc"
   ],
   "dependencies": {
