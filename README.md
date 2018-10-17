@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/revelrylabs/elixir_react_render.svg?branch=master)](https://travis-ci.org/revelrylabs/elixir_react_render)
 [![Hex.pm](https://img.shields.io/hexpm/dt/react_render.svg)](https://hex.pm/packages/react_render)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Coverage Status](https://coveralls.io/repos/github/revelrylabs/elixir_react_render/badge.svg)](https://coveralls.io/github/revelrylabs/elixir_react_render)
 
 Renders React as HTML
 
