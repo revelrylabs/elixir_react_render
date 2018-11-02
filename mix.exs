@@ -37,10 +37,9 @@ defmodule ReactRender.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:jason, "~> 1.0"},
       {:ex_doc, "~> 0.18.1", only: :dev},
       {:excoveralls, "~> 0.8.0", only: :test},
-      {:poolboy, "~> 1.5.1"}
+      {:nodejs, "~> 0.2"}
     ]
   end
 

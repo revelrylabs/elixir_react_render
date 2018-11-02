@@ -2,7 +2,6 @@ defmodule ReactRender do
   use Supervisor
 
   @timeout 10_000
-  @pool_name :react_render
   @default_pool_size 4
 
   @moduledoc """
@@ -13,16 +12,26 @@ defmodule ReactRender do
   Starts the ReactRender and workers.
 
   ## Options
-    * `:render_service_path` - (required) is the path to the react render service relative
+    * `:path` - (required) is the path to the react render service relative
   to your current working directory
     * `:pool_size` - (optional) the number of workers. Defaults to 4
   """
   @spec start_link(keyword()) :: {:ok, pid} | {:error, any()}
   def start_link(args) do
-    default_options = [pool_size: @default_pool_size]
-    opts = Keyword.merge(default_options, args)
+    default_options = [
+      pool_size: @default_pool_size,
+      timeout: 60_000,
+      path: Path.join(:code.priv_dir(:react_render), "nodejs")
+    ]
 
-    Supervisor.start_link(__MODULE__, opts, name: __MODULE__)
+    opts = Keyword.merge(default_options, hd(args))
+
+    children = [
+      supervisor(NodeJS.Supervisor, [opts])
+    ]
+
+    supervisor_opts = Keyword.merge([strategy: :one_for_one, name: __MODULE__], opts)
+    Supervisor.start_link(children, supervisor_opts)
   end
 
   @doc """
@@ -90,47 +99,9 @@ defmodule ReactRender do
   end
 
   defp do_get_html(component_path, props) do
-    task =
-      Task.async(fn ->
-        :poolboy.transaction(
-          @pool_name,
-          fn pid -> GenServer.call(pid, {:html, component_path, props}) end,
-          :infinity
-        )
-      end)
-
-    case Task.await(task, @timeout) do
-      %{"error" => error} when not is_nil(error) ->
-        normalized_error = %{
-          message: error["message"],
-          stack: error["stack"]
-        }
-
-        {:error, normalized_error}
-
-      result ->
-        {:ok, result}
-    end
-  end
-
-  # --- Supervisor Callbacks ---
-  @doc false
-  def init(opts) do
-    pool_size = Keyword.fetch!(opts, :pool_size)
-    render_service_path = Keyword.fetch!(opts, :render_service_path)
-
-    pool_opts = [
-      name: {:local, @pool_name},
-      worker_module: ReactRender.Worker,
-      size: pool_size,
-      max_overflow: 0
-    ]
-
-    children = [
-      :poolboy.child_spec(@pool_name, pool_opts, [render_service_path])
-    ]
-
-    opts = [strategy: :one_for_one]
-    Supervisor.init(children, opts)
+    NodeJS.call(
+      {:server, :makeHtml},
+      %{path: component_path, props: props}
+    )
   end
 end
