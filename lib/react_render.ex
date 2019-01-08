@@ -90,13 +90,12 @@ defmodule ReactRender do
   end
 
   defp do_get_html(component_path, props) do
+    IO.inspect component_path
+    IO.inspect props
+
     task =
       Task.async(fn ->
-        :poolboy.transaction(
-          @pool_name,
-          fn pid -> GenServer.call(pid, {:html, component_path, props}) end,
-          :infinity
-        )
+        NodeJS.call({:server, :makeHtml}, [component_path, props])
       end)
 
     case Task.await(task, @timeout) do
@@ -109,6 +108,8 @@ defmodule ReactRender do
         {:error, normalized_error}
 
       result ->
+        IO.inspect result
+
         {:ok, result}
     end
   end
@@ -127,7 +128,9 @@ defmodule ReactRender do
     ]
 
     children = [
-      :poolboy.child_spec(@pool_name, pool_opts, [render_service_path])
+      supervisor(NodeJS.Supervisor, [
+        [path: Path.join(:code.priv_dir(:react_render), "nodejs")]
+      ])
     ]
 
     opts = [strategy: :one_for_one]

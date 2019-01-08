@@ -16,7 +16,7 @@ function deleteCache(componentPath) {
   }
 }
 
-function makeHtml({path, props}) {
+function makeHtml(path, props) {
   try {
     const componentPath = path
 
@@ -39,6 +39,7 @@ function makeHtml({path, props}) {
     return response
   } catch (err) {
     const response = {
+      path,
       error: {
         type: err.constructor.name,
         message: err.message,
@@ -71,7 +72,7 @@ function startServer() {
   })
 }
 
-module.exports = {startServer}
+module.exports = {startServer, makeHtml}
 
 if (require.main === module) {
   startServer()
