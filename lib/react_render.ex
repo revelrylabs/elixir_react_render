@@ -90,16 +90,13 @@ defmodule ReactRender do
   end
 
   defp do_get_html(component_path, props) do
-    IO.inspect component_path
-    IO.inspect props
-
     task =
       Task.async(fn ->
         NodeJS.call({:server, :makeHtml}, [component_path, props])
       end)
 
     case Task.await(task, @timeout) do
-      %{"error" => error} when not is_nil(error) ->
+      {:ok, %{"error" => error}} when not is_nil(error) ->
         normalized_error = %{
           message: error["message"],
           stack: error["stack"]
@@ -107,9 +104,7 @@ defmodule ReactRender do
 
         {:error, normalized_error}
 
-      result ->
-        IO.inspect result
-
+      {:ok, result} ->
         {:ok, result}
     end
   end
