@@ -122,11 +122,18 @@ defmodule ReactRender do
       max_overflow: 0
     ]
 
-    children = [
-      supervisor(NodeJS.Supervisor, [
-        [path: Path.join(:code.priv_dir(:react_render), "nodejs")]
-      ])
-    ]
+    children =
+      case Application.get_application(:nodejs) do
+        nil ->
+          [
+            supervisor(NodeJS.Supervisor, [
+              [path: Path.join(:code.priv_dir(:react_render), "nodejs")]
+            ])
+          ]
+
+        _ ->
+          []
+      end
 
     opts = [strategy: :one_for_one]
     Supervisor.init(children, opts)
