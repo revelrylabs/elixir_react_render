@@ -1,6 +1,6 @@
 {
   "name": "react_render",
-  "version": "1.0.0",
+  "version": "2.0.2",
   "author": "Bryan Joseph <bryan@revelry.co> (https://revelry.co)",
   "license": "MIT",
   "files": [
@@ -12,10 +12,11 @@
     ".babelrc"
   ],
   "dependencies": {
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1",
-    "babel-register": "^6.26.0",
+    "@babel/core": "^7.3.3",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
     "react": ">= 16.3 < 17",
     "react-dom": ">= 16.3 < 17"
   }

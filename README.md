@@ -24,7 +24,7 @@ end
 
 ## Getting Started with Phoenix
 
-- Add `react_render` to your package.json
+- Add `react_render` to your dependencies in package.json
 
 ```js
 "react_render": "file:../deps/react_render"
@@ -44,30 +44,57 @@ const ReactRender = require('react_render/priv/server')
 ReactRender.startServer()
 ```
 
-- Add `ReactRender` to your Supervisor as a child.
+- Add `ReactRender` to your Supervisor as a child. We're using the absolute path to be sure where the file is.
 
 ```elixir
-  render_service_path = "assets/js/server.js"
+  render_service_path = "#{File.cwd!}/assets/js/server.js"
   pool_size = 4
 
   supervisor(ReactRender, [[render_service_path: render_service_path, pool_size: 4]])
 ```
 
-- Call `ReactRender.render/2`
+- Create a react component like:
+
+```js
+import React, {Component, createElement} from 'react'
+
+class HelloWorld extends Component {
+  render() {
+    const {name} = this.props
+
+    return <div>Hello {name}</div>
+  }
+}
+
+export default HelloWorld
+```
+
+- Call `ReactRender.render/2` inside the action of your controller
 
 ```elixir
-  component_path = "./HelloWorld.js"
+def index(conn, _params) do
+  component_path = "#{File.cwd!}/assets/js/HelloWorld.js"
   props = %{name: "Revelry"}
 
-  ReactRender.render(component_path, props)
+  { :safe, helloWorld } = ReactRender.render(component_path, props)
+
+  render(conn, "index.html", helloWorldComponent: helloWorld)
+end
 ```
 
 `component_path` can either be an absolute path or one relative to the render service. The stipulation is that components must be in the same path or a sub directory of the render service. This is so that the babel compiler will be able to compile it. The service will make sure that any changes you make are picked up. It does this by removing the component_path from node's `require` cache. If do not want this to happen, make sure to add `NODE_ENV` to your environment variables with the value `production`.
+
+- Render the component in the template
+
+```elixir
+<%= raw @helloWorldComponent %>
+```
 
 - To hydrate server-created components in the client, add the following to your `app.js`
 
 ```js
 import {hydrateClient} from 'react_render/priv/client'
+import HelloWorld from './HelloWorld.js'
 
 function getComponentFromStringName(stringName) {
   // Map string component names to your react components here
