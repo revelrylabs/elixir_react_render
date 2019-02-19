@@ -2,9 +2,12 @@ const ReactServer = require('react-dom/server')
 const React = require('react')
 const readline = require('readline')
 
-require('babel-polyfill')
-require('babel-register')({
-  presets: ['env']
+require('@babel/polyfill')
+require('@babel/register')({
+  presets: [
+    [require.resolve('@babel/preset-env')],
+    [require.resolve('@babel/preset-react')]
+  ]
 })
 
 function deleteCache(componentPath) {
