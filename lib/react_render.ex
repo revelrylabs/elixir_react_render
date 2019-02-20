@@ -115,25 +115,20 @@ defmodule ReactRender do
     pool_size = Keyword.fetch!(opts, :pool_size)
     render_service_path = Keyword.fetch!(opts, :render_service_path)
 
-    pool_opts = [
-      name: {:local, @pool_name},
-      worker_module: ReactRender.Worker,
-      size: pool_size,
-      max_overflow: 0
-    ]
-
     children =
-      case Application.get_application(:nodejs) do
-        nil ->
+      case Application.ensure_all_started(:nodejs) do
+        {:ok, _} ->
+          []
+        _ ->
           [
             supervisor(NodeJS.Supervisor, [
               [path: Path.join(:code.priv_dir(:react_render), "nodejs")]
-            ])
+              ])
           ]
 
-        _ ->
-          []
       end
+
+
 
     opts = [strategy: :one_for_one]
     Supervisor.init(children, opts)
