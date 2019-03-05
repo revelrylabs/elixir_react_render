@@ -1,5 +1,5 @@
 const ReactServer = require('react-dom/server')
-const React = require('react')
+const React = global.React = require('react')
 const readline = require('readline')
 
 require('@babel/polyfill')
