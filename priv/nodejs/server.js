@@ -7,7 +7,17 @@ require('@babel/register')({
   presets: [
     [require.resolve('@babel/preset-env')],
     [require.resolve('@babel/preset-react')]
-  ]
+  ],
+  plugins: [
+    require.resolve('@babel/plugin-syntax-dynamic-import'),
+    require.resolve('@babel/plugin-syntax-import-meta'),
+    require.resolve('@babel/plugin-proposal-class-properties'),
+    require.resolve('@babel/plugin-proposal-json-strings'),
+    require.resolve('@babel/plugin-proposal-function-sent'),
+    require.resolve('@babel/plugin-proposal-export-namespace-from'),
+    require.resolve('@babel/plugin-proposal-numeric-separator'),
+    require.resolve('@babel/plugin-proposal-throw-expressions'),
+  ],
 })
 
 function deleteCache(componentPath) {
