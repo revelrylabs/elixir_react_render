@@ -1,6 +1,3 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-
 /**
  * Hydrates react components that had HTML created from server.
  * Looks for divs with 'data-rendered' attributes. Gets component
