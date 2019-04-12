@@ -10,13 +10,15 @@ cache:
     - deps
     - priv/node_modules
 install:
+  - gem install coveralls-multi --no-document
   - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install 9
   - mix local.hex --force
   - mix local.rebar --force
   - mix deps.get
   - npm install
 script:
-  - MIX_ENV=test mix coveralls.travis --pro
+  - MIX_ENV=test mix coveralls.json
+  - coveralls-multi
 deploy:
   skip_cleanup: true
   provider: script
