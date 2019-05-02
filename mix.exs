@@ -39,7 +39,7 @@ defmodule ReactRender.MixProject do
     [
       {:jason, "~> 1.0"},
       {:ex_doc, "~> 0.20.0", only: :dev},
-      {:excoveralls, "~> 0.10.3", only: :test},
+      {:excoveralls, "~> 0.11.0", only: :test},
       {:nodejs, "~> 1.0"},
       {:poolboy, "~> 1.5.1"}
     ]
