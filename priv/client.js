@@ -9,15 +9,15 @@ import ReactDOM from 'react-dom'
  * @param {Function} componentMapper - A function that takes in a name and returns the component
  */
 export function hydrateClient(componentMapper) {
-  var serverRenderedComponents = document.querySelectorAll('[data-rendered]')
-  var serverRenderedComponentsLength = serverRenderedComponents.length;
+  const serverRenderedComponents = document.querySelectorAll('[data-rendered]')
+  const serverRenderedComponentsLength = serverRenderedComponents.length;
 
-  for (var i = 0; i < serverRenderedComponentsLength; i++) {
-    var serverRenderedComponent = serverRenderedComponents[i];
+  for (let i = 0; i < serverRenderedComponentsLength; i++) {
+    const serverRenderedComponent = serverRenderedComponents[i];
 
-    var component = componentMapper(serverRenderedComponent.dataset.component)
-    var props = JSON.parse(serverRenderedComponent.dataset.props)
-    var element = React.createElement(component, props)
+    const component = componentMapper(serverRenderedComponent.dataset.component)
+    const props = JSON.parse(serverRenderedComponent.dataset.props)
+    const element = React.createElement(component, props)
 
     ReactDOM.hydrate(element, serverRenderedComponent)
   }
