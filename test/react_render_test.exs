@@ -3,13 +3,13 @@ defmodule ReactRender.Test do
   doctest ReactRender
 
   setup_all do
-    apply(ReactRender, :start_link, [[render_service_path: "./priv/server.js"]])
+    apply(ReactRender, :start_link, [[render_service_path: "#{File.cwd!}/test/fixtures"]])
     :ok
   end
 
   describe "get_html" do
     test "returns html" do
-      {:ok, html} = ReactRender.get_html("./HelloWorld.js", %{name: "test"})
+      {:ok, html} = ReactRender.get_html("ClassComponent.js", %{name: "test"})
       assert html =~ "<div data-reactroot=\"\">Hello"
       assert html =~ "test</div>"
     end
@@ -22,16 +22,16 @@ defmodule ReactRender.Test do
 
   describe "render" do
     test "returns html" do
-      {:safe, html} = ReactRender.render("./HelloWorld.js", %{name: "test"})
+      {:safe, html} = ReactRender.render("PureFunction.js", %{name: "test"})
       assert html =~ "data-rendered"
       assert html =~ "data-component"
-      assert html =~ "HelloWorld"
+      assert html =~ "TestComponent"
       assert html =~ "<div data-reactroot=\"\">Hello"
       assert html =~ "test</div>"
     end
 
     test "raises RenderError when no component found" do
-      assert_raise ReactRender.RenderError, "Cannot find module './NotFound.js'", fn ->
+      assert_raise ReactRender.RenderError, ~r/Cannot find module/, fn ->
         ReactRender.render("./NotFound.js")
       end
     end
