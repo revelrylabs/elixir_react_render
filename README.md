@@ -36,18 +36,27 @@ end
 npm install
 ```
 
-- Create a file named `server.js` in your `assets/js` folder and add the following
+- Create a file named `render_server.js` in your `assets` folder and add the following
 
 ```js
-const ReactRender = require('react_render/priv/server')
+require('@babel/polyfill')
+require('@babel/register')({cwd: __dirname})
 
-ReactRender.startServer()
+module.exports = require('react_render/priv/server')
 ```
 
-- Add `ReactRender` to your Supervisor as a child. We're using the absolute path to be sure where the file is.
+- Add the following configuration to `assets/webpack.config` in order to handle dependency resolution:
+
+```
+resolve: {
+  symlinks: false
+}
+```
+
+- Add `ReactRender` to your Supervisor as a child. We're using the absolute path to ensure we are specifying the correct working directory that contains the `render_server.js` file we created earlier.
 
 ```elixir
-  render_service_path = "#{File.cwd!}/assets/js/server.js"
+  render_service_path = "#{File.cwd!}/assets"
   pool_size = 4
 
   supervisor(ReactRender, [[render_service_path: render_service_path, pool_size: 4]])
