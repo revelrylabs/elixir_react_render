@@ -91,7 +91,7 @@ defmodule ReactRender do
   defp do_get_html(component_path, props) do
     task =
       Task.async(fn ->
-        NodeJS.call({:server, :makeHtml}, [component_path, props])
+        NodeJS.call({:render_server, :render}, [component_path, props])
       end)
 
     case Task.await(task, @timeout) do

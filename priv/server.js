@@ -19,7 +19,7 @@ function requireComponent(componentPath) {
   return require(componentPath)
 }
 
-function makeHtml(componentPath, props) {
+function render(componentPath, props) {
   try {
     const component = requireComponent(componentPath)
     const element = component.default ? component.default : component
@@ -51,5 +51,5 @@ function makeHtml(componentPath, props) {
 }
 
 module.exports = {
-  makeHtml,
+  render,
 }
