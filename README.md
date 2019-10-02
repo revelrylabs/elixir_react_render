@@ -44,15 +44,6 @@ require('@babel/register')({cwd: __dirname})
 
 module.exports = require('react_render/priv/server')
 ```
-
-- Add the following configuration to `assets/webpack.config` in order to handle dependency resolution:
-
-```
-resolve: {
-  symlinks: false
-}
-```
-
 - Add `ReactRender` to your Supervisor as a child. We're using the absolute path to ensure we are specifying the correct working directory that contains the `render_server.js` file we created earlier.
 
 ```elixir
@@ -115,4 +106,12 @@ function getComponentFromStringName(stringName) {
 }
 
 hydrateClient(getComponentFromStringName)
+```
+
+- Update `assets/webpack.config` to include under the `resolve` section so that module resolution is handled properly:
+
+```
+resolve: {
+  symlinks: false
+}
 ```
