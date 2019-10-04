@@ -26,95 +26,95 @@ end
 
 - Add `react_render` to your dependencies in package.json
 
-```js
-"react_render": "file:../deps/react_render"
-```
+  ```js
+  "react_render": "file:../deps/react_render"
+  ```
 
 - Run `npm install`
 
-```bash
-npm install
-```
+  ```bash
+  npm install
+  ```
 
 - Create a file named `render_server.js` in your `assets` folder and add the following
 
-```js
-require('@babel/polyfill')
-require('@babel/register')({cwd: __dirname})
+  ```js
+  require('@babel/polyfill')
+  require('@babel/register')({cwd: __dirname})
 
-module.exports = require('react_render/priv/server')
-```
+  module.exports = require('react_render/priv/server')
+  ```
 
-Note: You must move any `@babel` used for server-side rendering from `devDependencies` to `dependencies` in your `package.json` file. This is required when installing dependencies required for production as these packages.
+  Note: You must move any `@babel` used for server-side rendering from `devDependencies` to `dependencies` in your `package.json` file. This is required when installing dependencies required for production as these packages.
 
 - Add `ReactRender` to your Supervisor as a child. We're using the absolute path to ensure we are specifying the correct working directory that contains the `render_server.js` file we created earlier.
 
-```elixir
-  render_service_path = "#{File.cwd!}/assets"
-  pool_size = 4
+  ```elixir
+    render_service_path = "#{File.cwd!}/assets"
+    pool_size = 4
 
-  supervisor(ReactRender, [[render_service_path: render_service_path, pool_size: 4]])
-```
+    supervisor(ReactRender, [[render_service_path: render_service_path, pool_size: 4]])
+  ```
 
 - Create a react component like:
 
-```js
-import React, {Component, createElement} from 'react'
+  ```js
+  import React, {Component, createElement} from 'react'
 
-class HelloWorld extends Component {
-  render() {
-    const {name} = this.props
+  class HelloWorld extends Component {
+    render() {
+      const {name} = this.props
 
-    return <div>Hello {name}</div>
+      return <div>Hello {name}</div>
+    }
   }
-}
 
-export default HelloWorld
-```
+  export default HelloWorld
+  ```
 
 - Call `ReactRender.render/2` inside the action of your controller
 
-```elixir
-def index(conn, _params) do
-  component_path = "#{File.cwd!}/assets/js/HelloWorld.js"
-  props = %{name: "Revelry"}
+  ```elixir
+  def index(conn, _params) do
+    component_path = "#{File.cwd!}/assets/js/HelloWorld.js"
+    props = %{name: "Revelry"}
 
-  { :safe, helloWorld } = ReactRender.render(component_path, props)
+    { :safe, helloWorld } = ReactRender.render(component_path, props)
 
-  render(conn, "index.html", helloWorldComponent: helloWorld)
-end
-```
+    render(conn, "index.html", helloWorldComponent: helloWorld)
+  end
+  ```
 
-`component_path` can either be an absolute path or one relative to the render service. The stipulation is that components must be in the same path or a sub directory of the render service. This is so that the babel compiler will be able to compile it. The service will make sure that any changes you make are picked up. It does this by removing the component_path from node's `require` cache. If do not want this to happen, make sure to add `NODE_ENV` to your environment variables with the value `production`.
+  `component_path` can either be an absolute path or one relative to the render service. The stipulation is that components must be in the same path or a sub directory of the render service. This is so that the babel compiler will be able to compile it. The service will make sure that any changes you make are picked up. It does this by removing the component_path from node's `require` cache. If do not want this to happen, make sure to add `NODE_ENV` to your environment variables with the value `production`.
 
 - Render the component in the template
 
-```elixir
-<%= raw @helloWorldComponent %>
-```
+  ```elixir
+  <%= raw @helloWorldComponent %>
+  ```
 
 - To hydrate server-created components in the client, add the following to your `app.js`
 
-```js
-import {hydrateClient} from 'react_render/priv/client'
-import HelloWorld from './HelloWorld.js'
+  ```js
+  import {hydrateClient} from 'react_render/priv/client'
+  import HelloWorld from './HelloWorld.js'
 
-function getComponentFromStringName(stringName) {
-  // Map string component names to your react components here
-  if (stringName === 'HelloWorld') {
-    return HelloWorld
+  function getComponentFromStringName(stringName) {
+    // Map string component names to your react components here
+    if (stringName === 'HelloWorld') {
+      return HelloWorld
+    }
+
+    return null
   }
 
-  return null
-}
-
-hydrateClient(getComponentFromStringName)
-```
+  hydrateClient(getComponentFromStringName)
+  ```
 
 - Update `assets/webpack.config` to include under the `resolve` section so that module resolution is handled properly:
 
-```
-resolve: {
-  symlinks: false
-}
-```
+  ```
+  resolve: {
+    symlinks: false
+  }
+  ```
