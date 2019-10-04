@@ -44,6 +44,9 @@ require('@babel/register')({cwd: __dirname})
 
 module.exports = require('react_render/priv/server')
 ```
+
+Note: You must move any `@babel` used for server-side rendering from `devDependencies` to `dependencies` in your `package.json` file. This is required when installing dependencies required for production as these packages.
+
 - Add `ReactRender` to your Supervisor as a child. We're using the absolute path to ensure we are specifying the correct working directory that contains the `render_server.js` file we created earlier.
 
 ```elixir
