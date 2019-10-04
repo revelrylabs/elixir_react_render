@@ -18,7 +18,7 @@ class TestComponent extends Component {
 
     return (
       <div onClick={this.onClick}>
-        Hello {name}
+        👋 {name}
       </div>
     )
   }
