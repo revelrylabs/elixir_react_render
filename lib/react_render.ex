@@ -2,7 +2,6 @@ defmodule ReactRender do
   use Supervisor
 
   @timeout 10_000
-  @pool_name :react_render
   @default_pool_size 4
 
   @moduledoc """
@@ -92,7 +91,7 @@ defmodule ReactRender do
   defp do_get_html(component_path, props) do
     task =
       Task.async(fn ->
-        NodeJS.call({:server, :makeHtml}, [component_path, props])
+        NodeJS.call({:render_server, :render}, [component_path, props])
       end)
 
     case Task.await(task, @timeout) do
@@ -115,19 +114,12 @@ defmodule ReactRender do
     pool_size = Keyword.fetch!(opts, :pool_size)
     render_service_path = Keyword.fetch!(opts, :render_service_path)
 
-    pool_opts = [
-      name: {:local, @pool_name},
-      worker_module: ReactRender.Worker,
-      size: pool_size,
-      max_overflow: 0
-    ]
-
     children =
       case Application.get_application(:nodejs) do
         nil ->
           [
             supervisor(NodeJS.Supervisor, [
-              [path: Path.join(:code.priv_dir(:react_render), "nodejs")]
+              [path: render_service_path, pool_size: pool_size]
             ])
           ]
 

@@ -11,12 +11,20 @@
     "./priv/client.js",
     ".babelrc"
   ],
-  "dependencies": {
+  "devDependencies": {
     "@babel/core": "^7.3.3",
     "@babel/polyfill": "^7.2.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-json-strings": "^7.2.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-syntax-import-meta": "^7.2.0",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "react": ">= 16.3 < 17",
+    "react-dom": ">= 16.3 < 17"
+  },
+  "peerDependencies": {
     "react": ">= 16.3 < 17",
     "react-dom": ">= 16.3 < 17"
   }
