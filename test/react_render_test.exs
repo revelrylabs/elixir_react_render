@@ -10,7 +10,7 @@ defmodule ReactRender.Test do
   describe "get_html" do
     test "returns html" do
       {:ok, html} = ReactRender.get_html("ClassComponent.js", %{name: "test"})
-      assert html =~ "<div data-reactroot=\"\">Hello"
+      assert html =~ "<div data-reactroot=\"\">👋"
       assert html =~ "test</div>"
     end
 
@@ -26,7 +26,7 @@ defmodule ReactRender.Test do
       assert html =~ "data-rendered"
       assert html =~ "data-component"
       assert html =~ "TestComponent"
-      assert html =~ "<div data-reactroot=\"\">Hello"
+      assert html =~ "<div data-reactroot=\"\">👋"
       assert html =~ "test</div>"
     end
 

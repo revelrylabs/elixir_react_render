@@ -6,7 +6,7 @@ function TestComponent(props) {
 
   return (
     <div onClick={onClick}>
-      Hello {name}
+      👋 {name}
     </div>
   )
 }
