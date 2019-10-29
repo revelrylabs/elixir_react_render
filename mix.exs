@@ -5,7 +5,7 @@ defmodule ReactRender.MixProject do
     [
       app: :react_render,
       version: "3.0.0",
-      elixir: "~> 1.6",
+      elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: description(),
