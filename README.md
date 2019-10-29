@@ -17,7 +17,7 @@ be found at [https://hexdocs.pm/react_render](https://hexdocs.pm/react_render).
 ```elixir
 def deps do
   [
-    {:react_render, "~> 2.0.0"}
+    {:react_render, "~> 3.0.0"}
   ]
 end
 ```
