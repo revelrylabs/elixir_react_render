@@ -58,7 +58,7 @@ defmodule ReactRender.MixProject do
         "README.md",
         "LICENSE",
         "CHANGELOG.md",
-        "priv/nodejs/server.js",
+        "priv/server.js",
         "priv/client.js",
         "package.json"
       ],
