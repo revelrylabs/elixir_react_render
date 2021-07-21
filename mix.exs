@@ -38,7 +38,7 @@ defmodule ReactRender.MixProject do
   defp deps do
     [
       {:jason, "~> 1.0"},
-      {:ex_doc, "~> 0.22.2", only: :dev},
+      {:ex_doc, "~> 0.25.0", only: :dev},
       {:excoveralls, "~> 0.13.1", only: :test},
       {:nodejs, "~> 2.0"}
     ]
